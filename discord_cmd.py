@@ -10,6 +10,7 @@ load_dotenv()
 PRIVATE_RSA_KEY_PATH = os.path.expanduser(os.getenv("PRIVATE_RSA_KEY_PATH"))
 SSH_HOST = os.getenv("SSH_HOST")
 DISCORD_API_TOKEN = os.getenv("DISCORD_API_TOKEN")
+KEY = os.getenv("KEY")
 
 active_sessions = {}
 intents = discord.Intents.default()
@@ -17,7 +18,7 @@ bot = commands.Bot(command_prefix="/", intents=intents)
 bot.remove_command("help")
 
 @bot.command(name="ssh", help="Initialize SSH session")
-async def ssh(ctx, username: str = None):
+async def ssh(ctx, username: str = None, key: str = None):
     if not username:
         await ctx.send(f"```\n{NOT_USERNAME}```")
         return
@@ -32,8 +33,11 @@ async def ssh(ctx, username: str = None):
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         private_key = paramiko.RSAKey.from_private_key_file(PRIVATE_RSA_KEY_PATH)
-        client.connect(hostname=SSH_HOST, username=username, pkey=private_key)
 
+        if key is not KEY:
+            raise Exception(WRONG_KEY)
+
+        client.connect(hostname=SSH_HOST, username=username, pkey=private_key)
         active_sessions[user_id] = client
 
         await ctx.send(f"```\n{AUTHENTICATION_SUCCESS} {username}```")

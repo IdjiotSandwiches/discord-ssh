@@ -51,7 +51,7 @@ def tmux_kill(session_name: str):
 
 def show_help():
     cmd_help = """--| List of command |--
-- /ssh [username]: connect to SSH connection using username
+- /ssh [username] [key]: connect to SSH connection using username and key
 - /tmux new [session_name]: create new session
 - /tmux send [session_name] [command]: send & execute command to given session
 - /tmux list: show all active session

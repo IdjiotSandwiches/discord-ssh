@@ -1,4 +1,5 @@
 NOT_USERNAME = "You need to insert your username."
+WRONG_KEY = "Wrong key. Hint: Strike Witches."
 
 ACTIVE_SESSIONS = "You already have an active SSH session!"
 NO_SESSIONS = "No active SSH session. Use `/ssh` to start one."
