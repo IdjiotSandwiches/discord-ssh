@@ -2,7 +2,7 @@ from discord.ext import commands
 import paramiko, discord, os
 from output import *
 from tmux_cmd import *
-from util import tmux_new, tmux_send, tmux_list, tmux_kill, show_help
+from util import tmux_new, tmux_send, tmux_list, tmux_kill, show_help, delete_user_message
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,21 +17,16 @@ intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="/", intents=intents)
 bot.remove_command("help")
 
-@bot.command(name="remove_ssh")
-async def remove_ssh(ctx):
-    command_keyword = "/ssh"
-
-    if command_keyword in ctx.message.content:
-        try:
-            await ctx.message.delete()
-            await ctx.send("🧹 Your message has been deleted.", delete_after=5)
-        except discord.Forbidden:
-            await ctx.send("❌ I can't delete your DM (missing permission).", delete_after=5)
-
 @bot.command(name="ssh", help="Initialize SSH session")
 async def ssh(ctx, username: str = None, key: str = None):
+    await delete_user_message(ctx)
+    
     if not username:
         await ctx.send(f"```\n{NOT_USERNAME}```")
+        return
+    
+    if not key:
+        await ctx.send(f"```\n{NOT_KEY}```")
         return
 
     user_id = ctx.author.id

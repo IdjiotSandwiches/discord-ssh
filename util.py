@@ -1,5 +1,5 @@
 from output import INTERACTIVE_CMD_RESTRICTION, ROOT_CMD_RESTRICTION
-import re, subprocess, time
+import re, subprocess, time, discord
 
 def validate_cmd(command: str):
     restricted_interactive_cmd = ["nano", "vim", "vi", "emacs", "less", "more", "man"]
@@ -59,3 +59,9 @@ def show_help():
 - /help: show list of commands
 - /exit: close SSH connection"""
     return cmd_help
+
+async def delete_user_message(ctx):
+    try:
+        await ctx.message.delete()
+    except discord.Forbidden:
+        await ctx.send("❌ Unable to delete your message.", delete_after=5)
