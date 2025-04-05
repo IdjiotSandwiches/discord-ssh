@@ -97,7 +97,7 @@ async def help(ctx):
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Waiting for command."))
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="TuGil on your command."))
 
 if __name__ == '__main__':
     bot.run(DISCORD_API_TOKEN)

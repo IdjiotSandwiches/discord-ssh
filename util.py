@@ -1,4 +1,4 @@
-from output import INTERACTIVE_CMD_RESTRICTION, ROOT_CMD_RESTRICTION
+from output import INTERACTIVE_CMD_RESTRICTION, ROOT_CMD_RESTRICTION, HELP, DELETE_RESTRICTION, DELETE_INVALID
 import re, subprocess, time, discord
 
 def validate_cmd(command: str):
@@ -51,19 +51,11 @@ def tmux_kill(session_name: str):
     return subprocess.run(['tmux', 'kill-session', '-t', session_name], capture_output=True, text=True)
 
 def show_help():
-    cmd_help = """--| List of command |--
-- /ssh [username] [key]: connect to SSH connection using username and key
-- /tmux new [session_name]: create new session
-- /tmux send [session_name] [command]: send & execute command to given session
-- /tmux list: show all active session
-- /tmux kill [session_name]: end given session
-- /help: show list of commands
-- /exit: close SSH connection"""
-    return cmd_help
+    return HELP
 
 async def delete_user_message(ctx):
     if isinstance(ctx.channel, discord.DMChannel):
-        await ctx.send("```\nThis command is for Server only.```")
+        await ctx.send(f"```\n{DELETE_RESTRICTION}```")
         return
 
     async for msg in ctx.channel.history(limit=100):
@@ -71,4 +63,4 @@ async def delete_user_message(ctx):
             try:
                 await msg.delete()
             except Exception as e:
-                print(f"```\nFailed to delete message: {e}```")
+                print(f"```\n{DELETE_INVALID}: {e}```")
