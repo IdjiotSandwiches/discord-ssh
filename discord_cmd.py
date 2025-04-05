@@ -18,7 +18,7 @@ bot = commands.Bot(command_prefix="/", intents=intents)
 bot.remove_command("help")
 
 @bot.command(name="remove_ssh")
-async def cleansecret(ctx):
+async def remove_ssh(ctx):
     command_keyword = "/ssh"
 
     if command_keyword in ctx.message.content:
