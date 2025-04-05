@@ -63,7 +63,15 @@ async def exit_ssh(ctx):
 @bot.command(name="tmux", help="Generate multiple sessions")
 async def tmux(ctx, tmux_cmd: str, session_name: str = None, *, command: str = None):
     await delete_user_message(ctx)
+
+    if not session_name:
+        await ctx.send(f"```\n{NOT_SESSION_NAME}```")
+        return
     
+    if not command:
+        await ctx.send(f"```\n{NOT_COMMAND}```")
+        return
+
     user_id = ctx.author.id
     if user_id not in active_sessions:
         await ctx.send(f"```\n{NO_SESSIONS}```")
@@ -71,7 +79,7 @@ async def tmux(ctx, tmux_cmd: str, session_name: str = None, *, command: str = N
         try:
             if tmux_cmd == TMUX_NEW:
                 result = tmux_new(session_name=session_name)
-                await ctx.send(result.stderr or f"```nSession '{session_name}' created.```")
+                await ctx.send(result.stderr or f"```Session '{session_name}' created.```")
             elif tmux_cmd == TMUX_SEND:
                 result = tmux_send(session_name=session_name, command=command)
                 for chunk in result:

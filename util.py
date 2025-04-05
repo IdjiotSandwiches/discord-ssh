@@ -39,8 +39,8 @@ def tmux_send(session_name: str, command: str):
 
     output = subprocess.run(['tmux', 'capture-pane', '-pt', session_name], capture_output=True, text=True)
     output = output.stdout
-    output = chunk_output(output)
     output = f"Current Session: {session_name}\n{output}"
+    output = chunk_output(output)
 
     return output
 
