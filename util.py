@@ -62,6 +62,7 @@ def show_help():
     return cmd_help
 
 async def delete_user_message(ctx):
+    print(type(ctx.channel))
     if not isinstance(ctx.channel, discord.DMChannel):
         await ctx.send("```\nThis command is for DMs only.```")
         return
