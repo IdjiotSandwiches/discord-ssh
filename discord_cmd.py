@@ -21,10 +21,12 @@ bot.remove_command("help")
 async def cleansecret(ctx):
     command_keyword = "/ssh"
 
-    # Make sure bot has Manage Messages permission
-    deleted = await ctx.channel.purge(limit=100, check=lambda msg: command_keyword in msg.content)
-
-    await ctx.send(f"🧹 Deleted {len(deleted)} messages containing `{command_keyword}`", delete_after=5)
+    if command_keyword in ctx.message.content:
+        try:
+            await ctx.message.delete()
+            await ctx.send("🧹 Your message has been deleted.", delete_after=5)
+        except discord.Forbidden:
+            await ctx.send("❌ I can't delete your DM (missing permission).", delete_after=5)
 
 @bot.command(name="ssh", help="Initialize SSH session")
 async def ssh(ctx, username: str = None, key: str = None):
