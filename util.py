@@ -27,8 +27,8 @@ def tmux_send(session_name: str, command: str):
     
     return is_valid, subprocess.run(['tmux', 'send-keys', '-t', session_name, command, 'C-m'], capture_output=True, text=True)
 
-def tmux_list():
-    return subprocess.run(['tmux', 'ls'], capture_output=True, text=True)
+def tmux_list(session_name: str):
+    return subprocess.run(['tmux', 'ls', session_name], capture_output=True, text=True)
 
 def tmux_kill(session_name: str):
     return subprocess.run(['tmux', 'kill-session', '-t', session_name], capture_output=True, text=True)

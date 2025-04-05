@@ -3,6 +3,9 @@ import paramiko, discord, os
 from output import *
 from tmux_cmd import *
 from util import validate_cmd, ansi_escape, tmux_new, tmux_send, tmux_list, tmux_kill
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PRIVATE_RSA_KEY_PATH = os.path.expanduser(os.getenv("PRIVATE_RSA_KEY_PATH"))
 SSH_HOST = os.getenv("SSH_HOST")
@@ -87,7 +90,7 @@ async def tmux(ctx, tmux_cmd: str, session_name: str, *, command: str):
         result = tmux_send(session_name=session_name, command=command)
         await ctx.send(result.stderr or f"Command sent to '{session_name}': {command}")
     elif tmux_cmd == TMUX_LIST:
-        is_valid, result = tmux_list()
+        is_valid, result = tmux_list(session_name=session_name)
         if not is_valid:
             await ctx.send(result)
         else:
