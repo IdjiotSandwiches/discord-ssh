@@ -48,3 +48,7 @@ def tmux_list():
 
 def tmux_kill(session_name: str):
     return subprocess.run(['tmux', 'kill-session', '-t', session_name], capture_output=True, text=True)
+
+def show_help():
+    cmd_help = "**List of command**\n- /ssh [username]: connect to SSH connection using username\n- /tmux new [session_name]: create new session\n- /tmux send [session_name] [command]: send & execute command to given session\n- /tmux list: show all active session\n- /tmux kill [session_name]: end given session"
+    return cmd_help

@@ -2,7 +2,7 @@ from discord.ext import commands
 import paramiko, discord, os
 from output import *
 from tmux_cmd import *
-from util import tmux_new, tmux_send, tmux_list, tmux_kill
+from util import tmux_new, tmux_send, tmux_list, tmux_kill, show_help
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -74,10 +74,23 @@ async def tmux(ctx, tmux_cmd: str, session_name: str = None, *, command: str = N
         except Exception as e:
             await ctx.send(f"```\n{CMD_EXECUTION_FAILED} {str(e)}```")
 
+@bot.command(name="help", help="Command guide")
+async def help(ctx):
+    await ctx.send(f"```\n{show_help()}```")
+
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Waiting for command."))
+
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    
+    if not message.content.startswith("/"):
+        await message.channel.send(f"```\n{show_help()}```")
+
+    await bot.process_commands(message)
 
 if __name__ == '__main__':
     bot.run(DISCORD_API_TOKEN)
