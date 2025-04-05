@@ -17,6 +17,15 @@ intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="/", intents=intents)
 bot.remove_command("help")
 
+@bot.command(name="remove_ssh")
+async def cleansecret(ctx):
+    command_keyword = "/secret"
+
+    # Make sure bot has Manage Messages permission
+    deleted = await ctx.channel.purge(limit=100, check=lambda msg: command_keyword in msg.content)
+
+    await ctx.send(f"🧹 Deleted {len(deleted)} messages containing `{command_keyword}`", delete_after=5)
+
 @bot.command(name="ssh", help="Initialize SSH session")
 async def ssh(ctx, username: str = None, key: str = None):
     if not username:
