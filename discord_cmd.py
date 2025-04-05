@@ -34,7 +34,7 @@ async def ssh(ctx, username: str = None, *, key: str = None):
 
         private_key = paramiko.RSAKey.from_private_key_file(PRIVATE_RSA_KEY_PATH)
 
-        if key is not KEY:
+        if key != KEY:
             raise Exception(WRONG_KEY)
 
         client.connect(hostname=SSH_HOST, username=username, pkey=private_key)
