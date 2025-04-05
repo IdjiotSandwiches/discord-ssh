@@ -18,7 +18,7 @@ bot = commands.Bot(command_prefix="/", intents=intents)
 bot.remove_command("help")
 
 @bot.command(name="ssh", help="Initialize SSH session")
-async def ssh(ctx, username: str = None, *, key: str = None):
+async def ssh(ctx, username: str = None, key: str = None):
     if not username:
         await ctx.send(f"```\n{NOT_USERNAME}```")
         return
