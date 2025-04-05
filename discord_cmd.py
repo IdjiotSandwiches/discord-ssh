@@ -84,6 +84,7 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Waiting for command."))
 
+@bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
