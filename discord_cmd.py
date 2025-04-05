@@ -29,14 +29,13 @@ async def ssh(ctx, username: str = None, *, key: str = None):
         return
 
     try:
+        if key != KEY:
+            raise ValueError(WRONG_KEY)
+        
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         private_key = paramiko.RSAKey.from_private_key_file(PRIVATE_RSA_KEY_PATH)
-
-        if key != KEY:
-            raise Exception(WRONG_KEY)
-
         client.connect(hostname=SSH_HOST, username=username, pkey=private_key)
         active_sessions[user_id] = client
 
