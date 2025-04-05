@@ -19,7 +19,7 @@ bot.remove_command("help")
 
 @bot.command(name="remove_ssh")
 async def cleansecret(ctx):
-    command_keyword = "/secret"
+    command_keyword = "/ssh"
 
     # Make sure bot has Manage Messages permission
     deleted = await ctx.channel.purge(limit=100, check=lambda msg: command_keyword in msg.content)
