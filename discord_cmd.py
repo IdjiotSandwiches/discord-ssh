@@ -100,8 +100,8 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Waiting for command."))
 
 @bot.event
-async def on_message(ctx, message):
-    await delete_user_message(ctx)
+async def on_message(message):
+    await message.delete()
 
     if message.author == bot.user:
         return
