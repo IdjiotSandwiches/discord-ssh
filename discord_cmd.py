@@ -14,6 +14,7 @@ DISCORD_API_TOKEN = os.getenv("DISCORD_API_TOKEN")
 active_sessions = {}
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="/", intents=intents)
+bot.remove_command("help")
 
 @bot.command(name="ssh", help="Initialize SSH session")
 async def ssh(ctx, username: str = None):
