@@ -101,8 +101,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    await message.delete()
-
     if message.author == bot.user:
         return
     if not message.content.startswith("/"):
