@@ -1,5 +1,5 @@
 from output import INTERACTIVE_CMD_RESTRICTION, ROOT_CMD_RESTRICTION
-import re, subprocess
+import re, subprocess, time
 
 def validate_cmd(command: str):
     restricted_interactive_cmd = ["nano", "vim", "vi", "emacs", "less", "more", "man"]
@@ -13,9 +13,18 @@ def validate_cmd(command: str):
     else:
         return True, ""
     
-def ansi_escape(output: str):
+def chunk_output(output: str):
     ansi_escape_pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-    return ansi_escape_pattern.sub('', output)
+    output = ansi_escape_pattern.sub('', output)
+
+    pattern = r"\b[\w.-]+@[\w.-]+:[^\n]*\$"
+    matches = list(re.finditer(pattern, output))
+
+    if matches:
+        start_index = matches[-2].start()
+        output = output[start_index:]
+
+    return [output[i:i+2000] for i in range(0, len(output), 2000)]
 
 def tmux_new(session_name: str):
     return subprocess.run(['tmux', 'new-session', '-d', '-s', session_name], capture_output=True, text=True)
@@ -23,12 +32,19 @@ def tmux_new(session_name: str):
 def tmux_send(session_name: str, command: str):
     is_valid, msg = validate_cmd(command=command)
     if not is_valid:
-        return is_valid, msg
-    
-    return is_valid, subprocess.run(['tmux', 'send-keys', '-t', session_name, command, 'C-m'], capture_output=True, text=True)
+        return chunk_output(msg)
 
-def tmux_list(session_name: str):
-    return subprocess.run(['tmux', 'ls', session_name], capture_output=True, text=True)
+    subprocess.run(['tmux', 'send-keys', '-t', session_name, command, 'C-m'], capture_output=True, text=True)
+    time.sleep(1)
+
+    output = subprocess.run(['tmux', 'capture-pane', '-pt', session_name], capture_output=True, text=True)
+    output = output.stdout
+    output = chunk_output(output)
+
+    return output
+
+def tmux_list():
+    return subprocess.run(['tmux', 'ls'], capture_output=True, text=True)
 
 def tmux_kill(session_name: str):
     return subprocess.run(['tmux', 'kill-session', '-t', session_name], capture_output=True, text=True)
