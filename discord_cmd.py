@@ -14,13 +14,14 @@ KEY = os.getenv("KEY")
 
 active_sessions = {}
 intents = discord.Intents.default()
+intents.message_content = True
 bot = commands.Bot(command_prefix="/", intents=intents)
 bot.remove_command("help")
 
 @bot.command(name="ssh", help="Initialize SSH session")
 async def ssh(ctx, username: str = None, key: str = None):
     await delete_user_message(ctx)
-    
+
     if not username:
         await ctx.send(f"```\n{NOT_USERNAME}```")
         return
