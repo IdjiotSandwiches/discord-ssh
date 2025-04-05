@@ -1,8 +1,5 @@
-NOT_USERNAME = "You need to insert your username. Use /help"
-NOT_KEY = "You need to insert your key. Use /help"
-NOT_SESSION_NAME = "You need to insert session name. Use /help"
-NOT_COMMAND = "You need to insert command. Use /help"
-NOT_TMUX_COMMAND = "You need to insert tmux command. Use /help"
+NOT_AUTH = "You need insert username and key. Use /help for more details."
+NOT_COMMAND = "Use /help to use the command."
 WRONG_KEY = "Wrong key. Hint: Strike Witches."
 
 ACTIVE_SESSIONS = "You already have an active SSH session!"

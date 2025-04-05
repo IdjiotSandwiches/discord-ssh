@@ -22,14 +22,10 @@ bot.remove_command("help")
 async def ssh(ctx, username: str = None, key: str = None):
     await delete_user_message(ctx)
 
-    if not username:
-        await ctx.send(f"```\n{NOT_USERNAME}```")
+    if not username or not key:
+        await ctx.send(f"```\n{NOT_AUTH}```")
         return
     
-    if not key:
-        await ctx.send(f"```\n{NOT_KEY}```")
-        return
-
     user_id = ctx.author.id
     if user_id in active_sessions:
         await ctx.send(f"```\n{ACTIVE_SESSIONS}```")
@@ -52,6 +48,8 @@ async def ssh(ctx, username: str = None, key: str = None):
 
 @bot.command(name="exit", help="Terminate SSH session")
 async def exit_ssh(ctx):
+    await delete_user_message(ctx)
+
     user_id = ctx.author.id
     if user_id in active_sessions:
         client = active_sessions.pop(user_id)
@@ -64,15 +62,7 @@ async def exit_ssh(ctx):
 async def tmux(ctx, tmux_cmd: str = None, session_name: str = None, *, command: str = None):
     await delete_user_message(ctx)
 
-    if not tmux_cmd:
-        await ctx.send(f"```\n{NOT_TMUX_COMMAND}```")
-        return
-
-    if not session_name:
-        await ctx.send(f"```\n{NOT_SESSION_NAME}```")
-        return
-    
-    if not command:
+    if not tmux_cmd or not session_name or not command:
         await ctx.send(f"```\n{NOT_COMMAND}```")
         return
 
@@ -101,6 +91,7 @@ async def tmux(ctx, tmux_cmd: str = None, session_name: str = None, *, command: 
 
 @bot.command(name="help", help="Command guide")
 async def help(ctx):
+    await delete_user_message(ctx)
     await ctx.send(f"```\n{show_help()}```")
 
 @bot.event
@@ -109,10 +100,11 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Waiting for command."))
 
 @bot.event
-async def on_message(message):
+async def on_message(ctx, message):
+    await delete_user_message(ctx)
+
     if message.author == bot.user:
         return
-    
     if not message.content.startswith("/"):
         await message.channel.send(f"```\n{show_help()}```")
 
