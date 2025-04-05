@@ -64,6 +64,10 @@ async def exit_ssh(ctx):
 async def tmux(ctx, tmux_cmd: str, session_name: str = None, *, command: str = None):
     await delete_user_message(ctx)
 
+    if not tmux_cmd:
+        await ctx.send(f"```\n{NOT_TMUX_COMMAND}```")
+        return
+
     if not session_name:
         await ctx.send(f"```\n{NOT_SESSION_NAME}```")
         return
