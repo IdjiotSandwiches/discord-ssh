@@ -62,7 +62,13 @@ def show_help():
     return cmd_help
 
 async def delete_user_message(ctx):
-    try:
-        await ctx.message.delete()
-    except discord.Forbidden:
-        await ctx.send("❌ Unable to delete your message.", delete_after=5)
+    if not isinstance(ctx.channel, discord.DMChannel):
+        await ctx.send("```\nThis command is for DMs only.```")
+        return
+
+    async for msg in ctx.channel.history(limit=100):
+        if msg.author == ctx.author:
+            try:
+                await msg.delete()
+            except Exception as e:
+                print(f"```\nFailed to delete message: {e}```")
